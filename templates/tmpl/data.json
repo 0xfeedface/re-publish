@@ -1,8 +1,8 @@
 {
   "http://id.feedface.de/me": {
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
       {"type": "uri", "value": "http://xmlns.com/foaf/0.1/Person"}
-    },
+    ],
     "http://xmlns.com/foaf/0.1/name": [
       {"type": "literal", "value": "Norman Heino"}
     ],
@@ -32,19 +32,19 @@
     "http://xmlns.com/foaf/0.1/name": [
       {"type": "literal", "value": "Philipp Frischmuth"}
     ],
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
       {"type": "uri", "value": "http://xmlns.com/foaf/0.1/Person"}
-    }
+    ]
   },
   "http://id.feedface.de/ClemensHoffmann": {
     "http://xmlns.com/foaf/0.1/name": [
       {"type": "literal", "value": "Clemens Hoffmann"},
     ],
-    "http://xmlns.com/foaf/0.1/homepage": {
+    "http://xmlns.com/foaf/0.1/homepage": [
       {"type": "uri", "value": "http://clelicy.com"}
-    },
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+    ],
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
       {"type": "uri", "value": "http://xmlns.com/foaf/0.1/Person"}
-    }
+    ]
   }
 }
