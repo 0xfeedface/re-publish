@@ -3,11 +3,23 @@ $(document).ready(function () {
   // $('#vcard').tmpl({'resource': resource}).appendTo('.content');
   // jQuery.tmpl(template, {'resource' : resource}).appendTo('.content');
 //  var templates = resource.getTemplatesTag();
+
   var backendSrv = 'http://localhost:8001/templates';
   var resources = _createResourceObjects(data);
   for (var res in resources.resourceObjects) {
     resources.getTemplate(backendSrv,resources.resourceObjects[res]);
   }
+
+  //testResource
+  var testResource = new RPResource(data);
+  testResource.initWithURI('http://id.feedface.de/me');
+  testResource.registerNamespace('foaf','http://xmlns.com/foaf/0.1/');
+  console.log('testResource: http://id.feedface.de/me');
+  console.log(testResource.valuesForProperty('foaf:knows'));
+  console.log('hasValuesForProperty foaf:knows: '+testResource.hasValuesForProperty('foaf:knows'));
+  console.log('hasValuesForProperty foaf:Document: '+testResource.hasValuesForProperty('foaf:Document'));
+  console.log(testResource.allProperties());
+  console.log(testResource.allPropertiesAndValues());
 });
 
 var data =  {

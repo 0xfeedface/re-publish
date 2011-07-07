@@ -1,15 +1,15 @@
-function RPResource () {
-  var _data = {};
+function RPResource (data) {
+  var _data = data;
   var _namespaces = {};
   var _uri;
 
   return {
     initWithURI: function (URI) {
-      this._uri = URI;
+      _uri = URI;
     },
 
     registerNamespace: function (prefix, name) {
-      this._namespaces[prefix] = name;
+      _namespaces[prefix] = name;
     },
 
     hasValuesForProperty: function(propertySpec) {
@@ -22,7 +22,7 @@ function RPResource () {
           propertyURI = propertyURI;
         }
       }
-      if ( typeof(_data[_uri][property]) != 'undefined' ) {
+      if ( typeof(_data[_uri][propertyURI]) != 'undefined' ) {
         return true;
       }
       return false;
