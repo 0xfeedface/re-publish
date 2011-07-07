@@ -30,7 +30,7 @@
       Knows: 
       <ul>
         {{each resource.valuesForProperty("foaf:knows") }}
-          <li>{{tmpl($value) "test-resource"}}</li>
+          <li>{{tmpl({property: "foaf:knows", value: $value}) "propertyTemplate"}}</li>
         {{/each}}
       </ul>
     </p>

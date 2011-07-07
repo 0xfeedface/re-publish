@@ -28,7 +28,7 @@ var s = http.createServer(function (req, res) {
             break;
           case 'workswith': data['workswith'] = fs.readFileSync('tmpl/workswith.tpl','utf-8');
             break;
-          case 'test-resource': data['test-resource'] = fs.readFileSync('tmpl/test-resource.tpl','utf-8');
+          case 'propertyTemplate': data['propertyTemplate'] = fs.readFileSync('tmpl/propertyTemplate.tpl','utf-8');
             break;
         }
       }

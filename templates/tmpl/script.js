@@ -91,7 +91,7 @@ function _createResourceObjects(data) {
         },
         url: backendSrv,
         type: "POST",
-        data: { 'vcard' : '', 'test-resource': ''},
+        data: { 'vcard' : '', 'propertyTemplate': ''},
         dataType: "json",
         success: function(data) {
           for (var template in data) {
