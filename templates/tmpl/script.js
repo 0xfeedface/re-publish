@@ -7,6 +7,8 @@ $(document).ready(function () {
   var backendSrv = 'http://localhost:8001/templates';
   var resources = _createResourceObjects(data);
   for (var res in resources.resourceObjects) {
+    resources.resourceObjects[res].initWithURI(res); // res == uri
+    resources.resourceObjects[res].registerNamespace('foaf','http://xmlns.com/foaf/0.1/');
     resources.getTemplate(backendSrv,resources.resourceObjects[res]);
   }
 
@@ -89,7 +91,7 @@ function _createResourceObjects(data) {
         },
         url: backendSrv,
         type: "POST",
-        data: { 'vcard' : '', 'test-resource' : ''},
+        data: { 'vcard' : '', 'test-resource': ''},
         dataType: "json",
         success: function(data) {
           for (var template in data) {
@@ -104,7 +106,7 @@ function _createResourceObjects(data) {
     }
   };
   for ( var uri in data ) {
-    resources.resourceObjects[uri] = new Resource(uri,data[uri]);
+    resources.resourceObjects[uri] = new RPResource(data);
   }
   return resources;
 }

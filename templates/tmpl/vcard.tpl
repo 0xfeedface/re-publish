@@ -1,35 +1,35 @@
-<div class="vcard" about="${resource.URI()}" typeof="foaf:Person">
-  {{if resource.propertyValue("foaf:depiction") }}
+<div class="vcard" about="" typeof="foaf:Person">
+  {{if resource.hasValuesForProperty("foaf:depiction") }}
   <span rel="foaf:depiction">
-    <img src="${resource.propertyValue("foaf:depiction")}" alt="depiction of ${resource.propertyValue("foaf:name")}"/>
+    <img src="${resource.valuesForProperty("foaf:depiction")}" alt="depiction of ${resource.valuesForProperty("foaf:name")}"/>
   </span>
   {{/if}}
-  {{if resource.propertyValue("foaf:name") }}
-    <p>Name: <span rel="foaf:name">${resource.propertyValue("foaf:name")}</span></p>
+  {{if resource.hasValuesForProperty("foaf:name") }}
+    <p>Name: <span rel="foaf:name">${resource.valuesForProperty("foaf:name")}</span></p>
   {{/if}}
-  {{if resource.propertyValue("foaf:birthDate") }}
-    <p>Day of birth: <span property="foaf:birthDate" datatype="xsd:date">${resource.propertyValue("foaf:birthDate")}</span></p>
+  {{if resource.hasValuesForProperty("foaf:birthDate") }}
+    <p>Day of birth: <span property="foaf:birthDate" datatype="xsd:date">${resource.valuesForProperty("foaf:birthDate")}</span></p>
   {{/if}}
-  {{if resource.propertyValue("foaf:phone") || resource.propertyValue("foaf:mbox") || resource.propertyValue("foaf:homepage")}}
+  {{if resource.hasValuesForProperty("foaf:phone") || resource.hasValuesForProperty("foaf:mbox") || resource.hasValuesForProperty("foaf:homepage")}}
     <p>
       <span class="block">
-        {{if resource.propertyValue("foaf:phone")}}
-        Phone: <a rel="foaf:phone" href="${resource.propertyValue("foaf:phone")}">${resource.propertyValue("foaf:phone")}</a>,
+        {{if resource.hasValuesForProperty("foaf:phone")}}
+        Phone: <a rel="foaf:phone" href="${resource.valuesForProperty("foaf:phone")}">${resource.valuesForProperty("foaf:phone")}</a>,
         {{/if}}
-        {{if resource.propertyValue("foaf:mbox")}}
-        <a rel="foaf:mbox" href="${resource.propertyValue("foaf:mbox")}">E-mail</a>,
+        {{if resource.hasValuesForProperty("foaf:mbox")}}
+        <a rel="foaf:mbox" href="${resource.valuesForProperty("foaf:mbox")}">E-mail</a>,
         {{/if}}
-        {{if resource.propertyValue("foaf:homepage")}}
-        <a rel="foaf:homepage" href="${resource.propertyValue("foaf:homepage")}">Homepage</a>
+        {{if resource.hasValuesForProperty("foaf:homepage")}}
+        <a rel="foaf:homepage" href="${resource.valuesForProperty("foaf:homepage")}">Homepage</a>
         {{/if}}
       </span>
     </p>
   {{/if}}
-  {{if resource.propertyValue("foaf:knows")}}
+  {{if resource.hasValuesForProperty("foaf:knows")}}
     <p>
       Knows: 
       <ul>
-        {{each resource.propertyValue("foaf:knows") }}
+        {{each resource.valuesForProperty("foaf:knows") }}
           <li>{{tmpl($value) "test-resource"}}</li>
         {{/each}}
       </ul>
@@ -37,3 +37,4 @@
   {{/if}}
   {{if typeof($.template("workswith"))=="function" }}{{tmpl "workswith"}}{{/if}}
 </div>
+
