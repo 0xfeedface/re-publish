@@ -19,23 +19,26 @@ var s = http.createServer(function (req, res) {
   });
   //handle post requests
   if ( req.method === 'POST') {
-    var data;
+    var request = {};
+    var responseTemplates = {};
     req.addListener('data', function(chunk) {
-      data = qs.parse(String(chunk));
-      for (var template in data) {
-        switch(template) {
-          case 'vcard': data['vcard'] = fs.readFileSync('tmpl/vcard.tpl','utf-8');
-            break;
-          case 'workswith': data['workswith'] = fs.readFileSync('tmpl/workswith.tpl','utf-8');
-            break;
-          case 'propertyTemplate': data['propertyTemplate'] = fs.readFileSync('tmpl/propertyTemplate.tpl','utf-8');
-            break;
+      request = qs.parse(String(chunk));
+      if ( typeof(request['requestTemplates'] == 'array' ) ) {
+        for (var index in request['requestTemplates']) {
+          switch(request['requestTemplates'][index]) {
+            case 'vcard': responseTemplates['vcard'] = fs.readFileSync('tmpl/vcard.tpl','utf-8');
+              break;
+            case 'workswith': responseTemplates['workswith'] = fs.readFileSync('tmpl/workswith.tpl','utf-8');
+              break;
+            case 'propertyTemplate': responseTemplates['propertyTemplate'] = fs.readFileSync('tmpl/propertyTemplate.tpl','utf-8');
+              break;
+          }
         }
       }
     });
     req.addListener('end', function() {
       res.writeHead(200,{'Content-Type': 'application/json' });
-      res.write(JSON.stringify(data));
+      res.write(JSON.stringify(responseTemplates));
       res.end();
     });
   }

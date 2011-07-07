@@ -84,6 +84,7 @@ function _createResourceObjects(data) {
     tplCache: {},
     getTemplate: function (backendSrv,resourceObject) {
       var template;
+      var requestTemplates = ['vcard','propertyTemplate'];
       $.ajax({
         beforeSend: function(jqXHR) {
           jqXHR.setRequestHeader("Content-Type", "application/json");
@@ -91,8 +92,9 @@ function _createResourceObjects(data) {
         },
         url: backendSrv,
         type: "POST",
-        data: { 'vcard' : '', 'propertyTemplate': ''},
-        dataType: "json",
+        data: {requestTemplates: requestTemplates},
+        // dataType: "json",
+        traditional: true,
         success: function(data) {
           for (var template in data) {
             $.template(template,data[template]);

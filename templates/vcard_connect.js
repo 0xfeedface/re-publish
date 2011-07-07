@@ -1,4 +1,5 @@
 var connect = require('connect');
+var fs = require('fs');
 
 var server = connect.createServer();
 
