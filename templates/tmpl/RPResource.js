@@ -1,13 +1,9 @@
-function RPResource (data) {
+function RPResource (uri, data) {
   var _data = data;
   var _namespaces = {};
-  var _uri;
+  var _uri = uri;
 
   return {
-    initWithURI: function (URI) {
-      _uri = URI;
-    },
-
     registerNamespace: function (prefix, name) {
       _namespaces[prefix] = name;
     },

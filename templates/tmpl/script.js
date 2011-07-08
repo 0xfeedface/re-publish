@@ -7,14 +7,12 @@ $(document).ready(function () {
   var backendSrv = 'http://localhost:8001/templates';
   var resources = _createResourceObjects(data);
   for (var res in resources.resourceObjects) {
-    resources.resourceObjects[res].initWithURI(res); // res == uri
     resources.resourceObjects[res].registerNamespace('foaf','http://xmlns.com/foaf/0.1/');
     resources.getTemplate(backendSrv,resources.resourceObjects[res]);
   }
 
   //testResource
-  var testResource = new RPResource(data);
-  testResource.initWithURI('http://id.feedface.de/me');
+  var testResource = new RPResource('http://id.feedface.de/me',data);
   testResource.registerNamespace('foaf','http://xmlns.com/foaf/0.1/');
   console.log('testResource: http://id.feedface.de/me');
   console.log(testResource.valuesForProperty('foaf:knows'));
@@ -108,7 +106,7 @@ function _createResourceObjects(data) {
     }
   };
   for ( var uri in data ) {
-    resources.resourceObjects[uri] = new RPResource(data);
+    resources.resourceObjects[uri] = new RPResource(uri, data);
   }
   return resources;
 }
