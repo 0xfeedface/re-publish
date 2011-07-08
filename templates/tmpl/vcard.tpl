@@ -1,4 +1,4 @@
-<div class="vcard" about="" typeof="foaf:Person">
+<div class="vcard" about="${resource.valuesForProperty("foaf:name")}" typeof="foaf:Person">
   {{if resource.hasValuesForProperty("foaf:depiction") }}
   <span rel="foaf:depiction">
     <img src="${resource.valuesForProperty("foaf:depiction")}" alt="depiction of ${resource.valuesForProperty("foaf:name")}"/>
