@@ -11,17 +11,21 @@ $(document).ready(function () {
     resources.getTemplate(backendSrv,resources.resourceObjects[res]);
   }
 
-  //testResource
+  // test RPResource functionality
   var testResource = new RPResource('http://id.feedface.de/me',data);
+  console.log('Is instance of RPResource: ' + (testResource instanceof RPResource));
   testResource.registerNamespace('foaf','http://xmlns.com/foaf/0.1/');
   console.log('testResource: http://id.feedface.de/me');
-  console.log(testResource.valuesForProperty('foaf:knows'));
+  console.log('valuesForProperty: ' + testResource.valuesForProperty('foaf:knows'));
   console.log('hasValuesForProperty foaf:knows: '+testResource.hasValuesForProperty('foaf:knows'));
   console.log('hasValuesForProperty foaf:Document: '+testResource.hasValuesForProperty('foaf:Document'));
+  console.log('allProperties (Array):');
   console.log(testResource.allProperties());
+  console.log('allPropertiesAndValues:');
   console.log(testResource.allPropertiesAndValues());
 });
 
+// hardcoded testdata
 var data =  {
   "http://id.feedface.de/me": {
     "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
@@ -78,10 +82,10 @@ var data =  {
 
 function _createResourceObjects(data) {
   var resources = {
-    resourceObjects : {},
+    resourceObjects : {}, // container of RPTemplate instances
     tplCache: {},
     getTemplate: function (backendSrv,resourceObject) {
-      var template;
+      // request templates here, which will be response from the node server
       var requestTemplates = ['vcard','propertyTemplate'];
       $.ajax({
         beforeSend: function(jqXHR) {
@@ -91,13 +95,21 @@ function _createResourceObjects(data) {
         url: backendSrv,
         type: "POST",
         data: {requestTemplates: requestTemplates},
-        // dataType: "json",
+        dataType: "json",
         traditional: true,
         success: function(data) {
           for (var template in data) {
             $.template(template,data[template]);
           }
-          $.tmpl('vcard', {'resource' : resourceObject}).appendTo('.content');
+          var template = $.tmpl('vcard', {'resource' : resourceObject}).appendTo('.content');
+          //register template
+          RPTemplate.registerTemplate(template);
+          //test RPTemplate
+          console.log('resourceObject is an instance of RPResource: ' + (resourceObject instanceof RPResource));
+          console.log('Template for resource http://id.feedface.de/me: ' );
+          console.log(RPTemplate.templateForResource('http://id.feedface.de/me'));
+          console.log('Template for each instance of RPResource: ');
+          console.log(RPTemplate.templateForResource(resourceObject));
         },
         error: function (err,status,text) {
           alert(text);
