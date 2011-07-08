@@ -7,11 +7,13 @@ var RPTemplate = (function ($) {
         if ( RPResourceOrURI instanceof RPResource ) {
           return _templates[RPResourceOrURI.resourceURI()];
         } else if ( typeof(RPResourceOrURI) == 'string' ) {
-          return _templates[RPResourceOrURI];
+          if ( typeof(_templates[RPResourceOrURI]) != 'undefined' ) {
+            return _templates[RPResourceOrURI];
+          } else {
+            throw 'noMatch';
+          }
         }  else if ( typeof(RPResourceOrURI) != 'string' ) {
           throw 'typeError';
-        } else {
-          throw 'noMatch';
         }
       } catch (er) {
         if (er == "noMatch") {
