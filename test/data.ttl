@@ -1,0 +1,42 @@
+@base <http://id.feedface.de/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rel: <http://purl.org/vocab/relationship/> .
+@prefix rsa: <http://www.w3.org/ns/auth/rsa#> . 
+@prefix cert: <http://www.w3.org/ns/auth/cert#> . 
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<key> a owl:ObjectProperty;
+    rdfs:domain foaf:Agent;
+    rdfs:range cert:PublicKey;
+    rdfs:comment "Links an agent to its public key." ;
+    owl:inverseOf cert:identity .
+
+<me> a foaf:Person;
+    foaf:name "Norman Heino";
+    foaf:firstName "Norman";
+    foaf:lastName "Heino";
+    foaf:birthday "05-04";
+    foaf:gender "male";
+    foaf:img <http://static.feedface.de/depiction180px.png>;
+    foaf:mbox_sha1sum "23d1a7f569fd737f660f454927dd184c9bef7e65";
+    foaf:workplaceHomepage <http://bis.informatik.uni-leipzig.de/>, <http://aksw.org/>;
+    foaf:workInfoHomepage <http://bis.informatik.uni-leipzig.de/NormanHeino>;
+    foaf:homepage <http://feedface.de/>;
+    foaf:weblog <http://blog.feedface.de/>;
+    <key> <publicKey> ;
+    # foaf:publications <>;
+    foaf:plan "I am a PhD student in Computer Science at Leipzig University";
+    foaf:based_near <http://dbpedia.org/resource/Leipzig>;
+    rel:worksWith <http://philipp.frischmuth24.de/id/me>;
+    rel:worksWith <http://www.informatik.uni-leipzig.de/~auer/foaf.rdf#me>;
+    rel:worksWith <http://www.thomas-riechert.de/rdf/foaf.rdf#me>;
+    rel:worksWith <http://jens-lehmann.org/foaf.rdf#i>;
+    rel:worksWith <http://michael-martin.info/rdf/foaf.rdf#me>;
+    rel:worksWith <http://dblp.l3s.de/d2r/resource/authors/Sebastian_Hellmann>;
+    rel:worksWith <http://data.semanticweb.org/person/joerg-unbehauen> .
+
+<publicKey> a rsa:RSAPublicKey;
+    cert:identity <me>;
+    rsa:modulus "00:d0:86:d3:a9:3d:eb:e2:04:bd:17:4b:51:ae:52:eb:22:f8:07:14:b2:bc:ca:a0:74:ed:15:7b:ec:a5:0d:a5:c9:1e:28:ca:2f:e7:fe:19:2b:a9:47:94:bc:36:02:1d:21:8a:d3:bc:e0:fb:af:e1:f1:65:b4:22:1a:31:4a:a9:da:a7:e7:fc:18:b0:94:8d:4d:53:07:1b:f2:a5:07:bf:4f:c8:f7:7c:86:72:c7:ab:a8:18:f5:97:e3:81:fa:16:ce:ea:a4:ef:09:41:38:c4:ab:ce:55:40:1c:7a:38:e8:b0:90:f8:24:d2:7b:2c:d1:f4:30:b3:7f:fb:c3:59:c7:33:2b:23:16:a4:17:76:eb:0f:65:9f:f7:94:49:6d:30:70:3b:60:db:4b:0a:63:95:45:64:ea:04:8e:74:bb:3b:36:d8:19:d7:77:ce:0c:95:32:50:b7:2c:7a:fd:79:55:3e:24:f4:61:97:4a:2e:f4:8e:68:d4:bf:e3:74:90:c8:cd:6e:13:c9:63:c3:7b:4f:e3:2a:f8:20:f2:c0:92:e7:76:c4:ee:aa:24:08:99:09:47:af:2b:11:7e:7e:d6:91:21:12:f6:12:c2:dc:38:fd:b8:78:6d:47:43:36:3d:bd:c9:09:f1:7a:f0:1a:9d:f6:67:36:60:fd:f3:a8:11:57:45"^^cert:hex;
+    rsa:public_exponent "35"^^cert:int .

@@ -1,0 +1,27 @@
+@base <http://philipp.frischmuth24.de/id/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rel: <http://purl.org/vocab/relationship/> .
+@prefix rsa: <http://www.w3.org/ns/auth/rsa#> .
+@prefix cert: <http://www.w3.org/ns/auth/cert#> .
+
+<me> a foaf:Person;
+     foaf:name "Philipp Frischmuth";
+     foaf:firstName "Philipp";
+     foaf:lastName "Frischmuth";
+     foaf:birthday "10-09";
+     foaf:gender "male";
+     foaf:img <http://img.frischmuth24.de/people/me.jpg>;
+     foaf:based_near <http://dbpedia.org/resource/Leipzig>;
+     rel:worksWith <http://www.informatik.uni-leipzig.de/~auer/foaf.rdf#me>;
+     rel:worksWith <http://www.thomas-riechert.de/rdf/foaf.rdf#me>;
+     rel:worksWith <http://jens-lehmann.org/foaf.rdf#i>;
+     rel:worksWith <http://michael-martin.info/rdf/foaf.rdf#me>;
+     rel:worksWith <http://dblp.l3s.de/d2r/resource/authors/Sebastian_Hellmann>;
+     rel:worksWith <http://data.semanticweb.org/person/joerg-unbehauen> ;
+     rel:worksWith <http://id.feedface.de/me> ;
+     <publicKey> _:node1 .
+     
+_:node1 a rsa:RSAPublicKey;
+    cert:identity <me>;
+    rsa:modulus """00:b4:10:69:0d:e2:d9:08:b1:75:00:12:55:c2:c8:33:72:61:57:55:3c:43:fb:52:09:56:71:ca:13:12:7c:ff:b2:54:35:55:19:95:89:16:3d:14:b8:47:61:20:80:2d:61:fe:ca:f7:67:26:ce:cb:f3:c4:73:ed:22:3f:bf:3f:05"""^^cert:hex;
+    rsa:public_exponent "65537"^^cert:int .
