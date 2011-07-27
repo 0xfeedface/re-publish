@@ -17,3 +17,7 @@ Usage
 .
 
     node lib/server.js test/data.ttl
+
+Templates
+---------
+HTML rendering/templates is currently under development.
