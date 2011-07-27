@@ -1,0 +1,45 @@
+var defaults = exports.defaults = {
+    /* 
+     * The namespace under which you serve your data  (e.g. your domain).
+     */
+    namespace: 'http://webid.example.com/', 
+    
+    /*
+     * Which type to serve by default; choose a value from typeMapping (below).
+     */
+    type: 'rdfxml', 
+    
+    /*
+     * If enabled, node_linkeddate will log requests and whether resources were found.
+     */
+    enableLogging: true, 
+    
+    /*
+     * Port to listen on.
+     */
+    serverPort: 8000, 
+    
+    /*
+     * The file that contains the resources to serve.
+     */
+    dataFilePath: './data.rdf',
+    
+    /*
+     * Flag that indicates, whether to use the Concise Bounded Description 
+     * (CBD) [1] for export.
+     *
+     * [1] http://www.w3.org/Submission/CBD/
+     */
+     exportCBD: false, 
+};
+
+/**
+ * Mapping of mime types to raptor parser names.
+ */
+var typeMapping = exports.typeMapping = {
+    'application/rdf+xml':  'rdfxml', 
+    'text/turtle':          'turtle', 
+    'application/rdf+json': 'json', 
+    'text/plain':           'ntriples', 
+    '*/*':                  defaults.type,
+};
