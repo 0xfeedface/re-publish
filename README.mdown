@@ -14,6 +14,6 @@ Usage
 * Get an [RDF](http://www.w3.org/TR/rdf-primer/) file (e.g. your [FOAF](http://www.foaf-project.org/) profile)
 * Start the server by passing it the RDF file's path:
 
-
+.
 
     node lib/server.js test/data.ttl
