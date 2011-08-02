@@ -1,9 +1,9 @@
-{{if resource.propertyValue("rel:worksWith") }}
+{{if resource.hasValuesForProperty("rel:worksWith") }}
   <p>
     Works with: 
     <ul>
-      {{each resource.propertyValue("rel:worksWith") }}
-        <li>{{tmpl($value) "test-resource"}}</li>
+      {{each resource.valuesForProperty("rel:worksWith") }}
+        <li>{{tmpl({property: "foaf:knows", value: $value}) "propertyTemplate"}}</li>
       {{/each}}
     </ul>
   </p>
