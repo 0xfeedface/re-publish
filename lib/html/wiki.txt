@@ -1,0 +1,287 @@
+re:publish
+
+Publish linked data in HTML for human consumption
+-------------------------------------------------
+
+Templates
+---------
+The system behind the publishing linked data in HTML based on jquerys template engine.
+While requesting text/html, the following actions proceed.
+
+Overview:
+---------
+
+Server-Side-Part:
+-----------------
+1. The re:publish server.js gets a request for HTML from client.
+2. Imports the body.html (lib/html/body.html).
+3. Replaces the placeholder "__DESCRIPTION__", which is located within a script tag, 
+   with the requested data in rdf/json.
+4. Sends the data (text/html) to vcard.js server.
+5. Response the client.
+
+Client-Side-Part:
+-----------------
+6. The response contains a html file, which includes
+   - stylesheet
+   - jQuery 1.6.2
+   - jQuery template plugin
+   - template.js
+   - templateFactory.js
+   - resource.js
+   - client.js
+   - the requested rdf/json data for the resource(s)
+7. If the document is ready, the client.js instantiates a Resource instance for each resource uri. 
+   In the process necessary namespaces will be registered (e.g. rel, foaf,...).
+8. Now the client request a template and uses the template factory function "templateForResource".
+   The function requires two parameter - the resource instance and a callback, which returns a jquery
+   template.
+9. The template is being appended to a dom element by using "toHTML".
+
+vcard.js
+--------
+This is at the moment still a backend nodejs server to serve templates and 
+should be integrated in the server.js.
+
+Requiered node.js modules
+-------------------------
+- paperboy
+
+Functionality
+-------------
+The server uses the paperboy module and is listening on port 8001 by default.
+A prominent role plays the "templateLibrary" object. It contains available templates 
+for special type of resources. The key is a type (e.g. http://xmlns.com/foaf/0.1/person) 
+and the value is a object, which needs a "init" template (visualized the main template). 
+If your jquery template uses partials, the name of your partial template are the keys right 
+after the "init" template. 
+All templates are located in lib/html/tmpl. Currently it exists a foaf:person template and 
+a default template, which will be response, if no compatible template exists for the 
+requested resource. Usually the template factory does requests (see below).
+
+Example
+-------
+var templateLibrary = {
+  'http://xmlns.com/foaf/0.1/person' : {
+    'init' : fs.readFileSync(path.join(WEBROOT, 'tmpl/vcard.tpl'),'utf-8'),
+    'workswith' : fs.readFileSync(path.join(WEBROOT, 'tmpl/workswith.tpl'),'utf-8'),
+    'propertyTemplate': fs.readFileSync(path.join(WEBROOT, 'tmpl/propertyTemplate.tpl'),'utf-8')
+  },
+  'default': {
+    'init' : fs.readFileSync(path.join(WEBROOT, 'tmpl/default.tpl'),'utf-8')
+  }
+}
+
+Add your own templates
+------------------------
+1. Create a jquery template. You can use inside the $ all functions of a the 
+   resource class (see below resource.js). The file extension is ".tpl".
+   How to write jquery templates refer the documentions on 
+   http://api.jquery.com/category/plugins/templates/.
+
+   For instance:
+   ------------
+   <div class="vcard" about="${resource.valuesForProperty("foaf:name")}" typeof="foaf:Person">
+   <!-- Depiction -->
+   {{if resource.hasValuesForProperty("foaf:depiction") }}
+     <span rel="foaf:depiction">
+       <img src="${resource.valuesForProperty("foaf:depiction")}" alt="depiction of ${resource.valuesForProperty("foaf:name")}"/>
+     </span>
+   {{/if}}
+   </div>
+
+2. Copy your template to lib/html/tmpl.
+3. Register your template (see above "Example" under vcard.js).
+
+List of available templates (lib/html/tpl)
+------------------------------------------
+- vcard.tpl
+  - template for type http://xmlns.com/foaf/0.1/person
+  - partials: 
+    - workswith.tpl
+    - propertyTemplate.tpl (for each li element)
+- default.tpl
+  - default template will be response, if no other compatible templates are available.
+
+templateFactory.js
+------------------
+The template factory uses the singleton pattern. This singleton manages the delivery of templates, 
+which are requested by the client.js. That means requesting necessary templates from the 
+node.js vcard.js server, caching templates and response them back to client.js. 
+Therefore it will prevented unnecessary request, only as much as needed 
+(more details under templateForResource).
+
+Attributes
+----------
+- _templates
+  - Private javascript object, which contains non-rendered jquery templates. 
+    The key is a specific uri type and the value is a instance of the template class.
+  -  var _templates = {
+       <typeUri> : { //instance of Template
+         init : 'ttt',
+         <partialName>: 'ttt',
+             .
+             .
+         <partialName>: 'ttt'
+       }
+     }
+
+- _callbacks (template)
+  - This is a private javascript object for temporally storing of callbacks, 
+    which will be delivered when using templateForResource and the template 
+    for the typeUri has the boolean value "true". To identify the callback from a request, 
+    the resourceUri is used as unique. It obtains the template as a paramter.
+  - var _callbacks = {
+      <resourceUri> : callback,
+           .
+           .
+      <resourceUri> : callback
+    }
+
+- _srv
+  - At the moment backend uri to vcard.js.
+
+Functions
+---------
+- templateForResource (ResourceOrType, callback)
+  - This function have to be set a resource instance or a resource type uri and a callback, 
+    which obtains the template. templateForResource throws an error, if a false type is 
+    delivered for ResourceOrType parameter (console.error). The callback is necessary because of 
+    asynchron ajax requests, if the requested template isn't already cached.
+    Secnario:
+    ---------
+    The client wants to get templates for three resources. All resources are from the same type
+    "http://xmlns.com/foaf/0.1/person". Because of asynchronism in javascript, it will requested 
+    the same template from vcard.js. Thereafter the template will set as parameter to the callback. 
+    Therefore two requests are unnecessary, if the first request would be cached.
+    Solution:
+    ---------
+    Case 1: The template wasn't requested yet.
+     - Check, if a compatible template is available.
+     - No template available.
+     - Requesting template.
+     - Set typeUri with boolean value "true" to _templates.
+     - Create an instance of requested template.
+     - Register template instance by using the private function "registerTemplate". 
+       It replaces the value "true" with the template.
+     - Thitherto all callbacks are called.
+    Case 2: The template is exactly beeing requested.
+     - Check, if a compatible template is available.
+     - Yes, but value is "true".
+     - The callback is stored to _callbacks. It will be called, 
+       if the first request registered the template for the same uriType.
+    Case 3: The template is already requested.
+     - Check, if a compatible template is available.
+     - Yes,it is a instance of template available.
+     - Call callback.
+
+- registerTemplate
+  - Via registerTemplate you can add instances of template to _templates. It returns a 
+    console.info message, if a template already cached by mistake.
+
+template.js
+-----------
+
+Attributes
+----------
+- template
+  - This attribute holds the init and partials template for a specific type of resource.
+  - var _template = {
+      init : 'ttt',
+      <partialName>: 'ttt',
+          .
+          .
+      <partialName>: 'ttt'
+    }
+
+
+Functions
+---------
+- setInit (initTemplate)
+  - Have to be set after instantiation.
+
+- setPartial (name, partial)
+  - Possibly to set partials. The name is the partial's name. Furthermore is the partial a jquery template.
+
+- toJSON
+  - If you are call template.toJSON(), you get the whole template as json datastructure.
+
+- toHTML (resource, appendTo)
+  - toHTML is a prototype function. By using this you have to deliver a resource instance and a specific id, class or dom element itself, 
+    where the rendered template will be appended. It also returns the rendered jquery template.
+
+resource.js
+-----------
+
+Attributes
+----------
+- _type
+  - rdf:type uri.
+
+- _uri
+  - Uri of resource.
+
+- _data
+  - Received rdf/json, which was response from lib/server.js
+
+- _namespaces
+  - Registered namespaces, which was set by using "registerNamespace".
+
+Functions
+---------
+- resourceURI
+  - Returns the resource's uri.
+
+- registerNamespace (prefix, name)
+  - Sets namespaces (e.g. "rel" or "foaf"). Name will be the long term of a prefix.
+  - e.g. resource.registerNamespace('foaf','http://xmlns.com/foaf/0.1/')
+
+- hasValueForProperty (propertySpec)
+  - This function checks if a resource has a value for a specific propertySpec.
+    It returns either true or false. A propertySpec can be for instance "foaf:name".
+    
+- valuesForProperty (propertySpec)
+  - This function tries to return the values for a propertySpec (e.g. "foaf:name"). 
+    It returns either a string (the resource has only one value for the propertySpec) or
+    an json object with objectkeys "type" (e.g. "uri") and "value". If an error occurred, 
+    it throws an alert.
+  - e.g. possibly returning json object for propertySpec "foaf:knows"
+    var object = {
+      {"type": "uri", "value": "http://uri/to/resource1"},
+      {"type": "uri", "value": "http://uri/to/resource2#me"},
+      {"type": "uri", "value": "http://uri/to/resource3"},
+      {"type": "uri", "value": "http://uri/to/resource4#me"}
+    }
+
+- allProperties
+  - Returns an array of all available properties.
+  - e.g. ['foaf:name', 'foaf:knows', 'foaf:phone']
+
+- allPropertiesAndValues
+  - Returns data as rdf/json by itself.
+  - see http://docs.api.talis.com/platform-api/output-types/rdf-json
+ 
+client.js
+---------
+This javascript Code does the "Client-Side-Part", which was described at the beginning.
+
+$(document).ready(function () {
+  //data
+  console.log(resourceDescription);
+  for (var resource in resourceDescription) {
+    console.log(resourceDescription[resource]);
+    var res = new Resource(resource,resourceDescription);
+    res.registerNamespace('foaf','http://xmlns.com/foaf/0.1/');
+    res.registerNamespace('rel','http://purl.org/vocab/relationship/');
+    TemplateFactory.templateForResource(res, function(template) {
+      template.toHTML(res,'.content');
+    });
+  }
+}
+
+The resourceDescription are the rdf/json data by lib/server.js, if text/html was requested.
+In this case for each resource in the resourceDescription will be 
+  - instantiated a resource instance, 
+  - registered namespaces and 
+  - requested the TemplateFactory Singleton to receive a template, 
+    which will be appended to a div with class content by using template.toHTML.
