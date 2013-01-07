@@ -9,6 +9,7 @@ It can be used to publish linked data in various formats for machines as well as
 Usage
 -----
 * Install [node.js](https://github.com/joyent/node/)
+* Install dependencies (`npm install paperboy raptor`)
 * Copy `config.js-dist` to `config.js` and adapt it to your needs.
   For instance set the namespace under which resources should be served (i.e. your domain).
 * Get an [RDF](http://www.w3.org/TR/rdf-primer/) file (e.g. your [FOAF](http://www.foaf-project.org/) profile)
