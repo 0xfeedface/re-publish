@@ -12,12 +12,12 @@ Usage
 * Install node dependencies cia npm (i.e. `npm install paperboy`)
 * Install `node_raptor`:
 
-    cd ..
-    brew install raptor
-    export RAPTOR_PREFIX=/usr/local
-    git clone git://github.com/0xfeedface/node_raptor.git
-    npm install -g
-    cd -
+        cd ..
+        brew install raptor
+        export RAPTOR_PREFIX=/usr/local
+        git clone git://github.com/0xfeedface/node_raptor.git
+        npm install -g
+        cd -
 
 * Copy `config.js-dist` to `config.js` and adapt it to your needs.
   For instance set the namespace under which resources should be served (i.e. your domain).
